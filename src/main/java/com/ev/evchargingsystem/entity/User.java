@@ -5,7 +5,6 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Entity
 @Data
@@ -16,15 +15,17 @@ public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
+    @NotEmpty
+    private String password;
     @NotEmpty(message = "Fullname not empty!")
     private String fullName;
     @Email
+    @Column(unique = true)
     private String email;
-    @Pattern(regexp = "/(0[3|5|7|8|9])+([0-9]{8})\\b/g")
+    @Pattern(regexp = "^(0(3\\d|5\\d|7\\d|8\\d|9\\d)\\d{7})$")
+    @Column(unique = true)
     private String phone;
-    @Pattern(regexp = "\\d{12}")
-    //Government ID có 12 số
-    private String governmentID;
-
+    @Column(columnDefinition = "VARCHAR(10) CHECK (role IN ('USER', 'ADMIN', 'STAFF'))")
     private String role;
+
 }
